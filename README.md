@@ -8,7 +8,7 @@ find classes with java reflect mechanism
         }
 * add it to your dependencies
 
-        implementation "com.github.seelikes.android:parser:1.0.0"
+        implementation "com.github.seelikes.android:parser:1.0.1"
 
 ## sample
 
