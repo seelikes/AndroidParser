@@ -57,6 +57,9 @@ public class AndroidParser {
     public static <T> List<Class<? extends T>> getClassExtends(Context context, Class<T> superClass, String basePackage) {
         List<Class<? extends T>> list = new ArrayList<>();
         getClass(context, basePackage, classObject -> {
+            if (classObject == null) {
+                return;
+            }
             if (superClass.isAssignableFrom(classObject) && classObject != superClass && (classObject.getModifiers() & Modifier.ABSTRACT) == 0) {
                 list.add((Class<? extends T>) classObject);
             }

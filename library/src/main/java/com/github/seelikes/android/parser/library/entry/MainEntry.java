@@ -1,4 +1,4 @@
-package com.github.seelikes.android.parser.demo;
+package com.github.seelikes.android.parser.library.entry;
 
 import android.app.Application;
 

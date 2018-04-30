@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 100
-        versionName "1.0.0"
+        versionCode 101
+        versionName "1.0.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -58,7 +58,7 @@ publishing {
         maven(MavenPublication) {
             groupId "com.github.seelikes.android"
             artifactId "parser"
-            version "1.0.0"
+            version "1.0.1"
             artifact androidJavadocsJar
             artifact androidSourcesJar
             artifact bundleRelease
