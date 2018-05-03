@@ -1,1 +1,1 @@
-include ':app', ':parser', ':library', ':wen'
+include ':app', ':parser', ':library', ':wen', ':dex'

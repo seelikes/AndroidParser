@@ -1,32 +1,28 @@
 package com.github.seelikes.android.parser;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
+import com.github.seelikes.android.dex.Parser;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
-import dalvik.system.DexFile;
-
+/**
+ * 该类只是对 {@link Parser} 类的简封装，推荐直接操作Parser类
+ */
 public class AndroidParser {
     /**
      * 获取具有制定注解类型的类
-     * @param context 应用上下文
      * @param entityClass 承接具体结果的实体类
      * @param annotationClass 目标注解
-     * @param basePackage 扫描的基础包
      * @param <T> 注解的类型
      * @param <C> 期望接受的目标的类型
      * @return 具有制定注解类型的类
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Annotation, C> List<ClassAnnotationEntity<T, C>> getClassWith(Context context, Class<ClassAnnotationEntity<T, C>> entityClass, Class<T> annotationClass, String basePackage) {
+    public static <T extends Annotation, C> List<ClassAnnotationEntity<T, C>> getClassWith(Parser parser, Class<ClassAnnotationEntity<T, C>> entityClass, Class<T> annotationClass) {
         List<ClassAnnotationEntity<T, C>> list = new ArrayList<>();
-        getClass(context, basePackage, classObject -> {
+        parser.getClass(classObject -> {
             T annotation = classObject.getAnnotation(annotationClass);
             if (annotation != null) {
                 try {
@@ -47,16 +43,14 @@ public class AndroidParser {
 
     /**
      * 获取指定类型的子类型
-     * @param context 应用上下文
      * @param superClass 父类型
-     * @param basePackage 扫描的基础包
      * @param <T> 父类型
      * @return 指定类型的子类型
      */
     @SuppressWarnings("unchecked")
-    public static <T> List<Class<? extends T>> getClassExtends(Context context, Class<T> superClass, String basePackage) {
+    public static <T> List<Class<? extends T>> getClassExtends(Parser parser, Class<T> superClass) {
         List<Class<? extends T>> list = new ArrayList<>();
-        getClass(context, basePackage, classObject -> {
+        parser.getClass(classObject -> {
             if (classObject == null) {
                 return;
             }
@@ -65,44 +59,6 @@ public class AndroidParser {
             }
         });
         return list;
-    }
-
-    /**
-     * 类扫描封装
-     * @param context 应用上下文
-     * @param basePackage 扫描的基础包
-     * @param checker 类检查器
-     */
-    public static void getClass(@NonNull Context context, String basePackage, ClassChecker checker) {
-        try {
-            DexFile dex = new DexFile(context.getPackageCodePath());
-            Enumeration<String> entries = dex.entries();
-            while (entries.hasMoreElements()) {
-                String className = entries.nextElement();
-                if (basePackage == null || basePackage.isEmpty() || className.startsWith(basePackage)) {
-                    try {
-                        checker.check(context.getClassLoader().loadClass(className));
-                    }
-                    catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 类检查器
-     */
-    public interface ClassChecker {
-        /**
-         * 检查给定类是否满足现行判断标准
-         * @param classObject 要检查的类型
-         */
-        void check(Class<?> classObject);
     }
 
     /**

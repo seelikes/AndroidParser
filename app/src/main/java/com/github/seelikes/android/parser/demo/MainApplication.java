@@ -3,6 +3,8 @@ package com.github.seelikes.android.parser.demo;
 import android.app.Application;
 import android.widget.Toast;
 
+import com.github.seelikes.android.dex.DexUtils;
+import com.github.seelikes.android.dex.Parser;
 import com.github.seelikes.android.log.SaLog;
 import com.github.seelikes.android.log.SaLogConstants;
 import com.github.seelikes.android.parser.AndroidParser;
@@ -27,7 +29,7 @@ public class MainApplication extends Application {
             .subscribe(c -> {
                 try {
                     SaLog.i(MainApplication.class, "onCreate.UL1901LP.DI1211", "class pass start.");
-                    List<Class<? extends MainEntry>> entries = AndroidParser.getClassExtends(this, MainEntry.class, getPackageName().substring(0, getPackageName().lastIndexOf(".")));
+                    List<Class<? extends MainEntry>> entries = AndroidParser.getClassExtends(DexUtils.with(this).basePackage(getPackageName().substring(0, getPackageName().lastIndexOf("."))).instantRun(BuildConfig.DEBUG), MainEntry.class);
                     SaLog.i(MainApplication.class, "onCreate.UL1901LP.DI1211", "class pass complete.");
                     SaLog.i(MainApplication.class, "onCreate.UL1901LP.DI1211", "entries.isEmpty(): " + entries.isEmpty());
                     if (!entries.isEmpty()) {

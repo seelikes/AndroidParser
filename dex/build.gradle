@@ -7,11 +7,10 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 102
-        versionName "1.0.2"
+        versionCode 100
+        versionName "1.0.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
@@ -31,25 +30,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-}
-
-task configured {
-    println project.name + ' configured enter.'
-    if (gradle.startParameter.taskRequests && gradle.startParameter.taskRequests[0].args[0].endsWith(':publish') && gradle.startParameter.taskRequests[0].args[0].startsWith(':parser')) {
-        println project.name + 'configured uploadArchives enter.'
-        dependencies.add('api', 'com.github.seelikes.android:dex:1.0.0')
-    }
-    else {
-        if (findProject(':dex')) {
-            println project.name + 'configured tools module dependency added.'
-            dependencies.add('api', project(':dex'))
-        }
-        else {
-            dependencies.add('api', 'com.github.seelikes.android:dex:1.0.0')
-        }
-    }
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
 task androidJavadocs(type: Javadoc) {
@@ -74,14 +56,13 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId "com.github.seelikes.android"
-            artifactId "parser"
-            version "1.0.2"
+            artifactId "dex"
+            version "1.0.0"
             artifact androidJavadocsJar
             artifact androidSourcesJar
             artifact bundleRelease
             pom.withXml {
                 def dependencies = asNode().appendNode('dependencies')
-                wrapIntoDependencies(dependencies, configurations.api, "compile")
                 wrapIntoDependencies(dependencies, configurations.implementation, "provided")
                 wrapIntoDependencies(dependencies, configurations.testImplementation, "test")
                 wrapIntoDependencies(dependencies, configurations.androidTestImplementation, "test")
