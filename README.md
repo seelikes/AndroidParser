@@ -14,6 +14,26 @@ find classes with java reflect mechanism
 
         implementation "com.github.seelikes.android:dex:1.0.0"
 
+* it is very important to call instantRun(true) if you enable instant Run
+
+        DexUtils.with(this).basePackage(getPackageName().substring(0, getPackageName().lastIndexOf("."))).instantRun(BuildConfig.DEBUG)
+
 ## sample
 
-        List<Class<? extends MainEntry>> entries = AndroidParser.getClassExtends(this, MainEntry.class, getPackageName());
+        List<Class<? extends MainEntry>> entries = AndroidParser.getClassExtends(DexUtils.with(this).basePackage(getPackageName().substring(0, getPackageName().lastIndexOf("."))).instantRun(BuildConfig.DEBUG), MainEntry.class);
+
+## custom your own dex parse logic
+
+        you can custom your own parse logic by call DexUtils directly
+
+        DexUtils.with(this)
+            .basePackage(getPackageName().substring(0, getPackageName().lastIndexOf(".")))
+            .instantRun(BuildConfig.DEBUG)
+            .getClass(classObject -> {
+                if (classObject == null) {
+                    return;
+                }
+                if (superClass.isAssignableFrom(classObject) && classObject != superClass && (classObject.getModifiers() & Modifier.ABSTRACT) == 0) {
+                    list.add((Class<? extends T>) classObject);
+                }
+            });
